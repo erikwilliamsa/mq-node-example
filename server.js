@@ -8,13 +8,13 @@ app.get('/send', function(req, res) {
   var msg=req.query.message;
   amqp.connect(amqurl, function(err, conn) {
     conn.createChannel(function(err, ch) {
-      var q = 'hello';
+      var exchange = 'amq.direct';
+      var key = req.query.key;
 
-      ch.assertQueue(q, {
-        durable: false
-      });
-      ch.sendToQueue(q, new Buffer(msg));
-      console.log(' [x] Sent ' + msg);
+      ch.assertExchange(exchange, 'direct');
+
+      ch.publish(exchange, key, new Buffer(msg));
+      console.log(' [x] Sent ' + msg + ' to exhange '+ exchange + ' & key ' + key);
     });
     setTimeout(function() {
       conn.close();
