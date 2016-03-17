@@ -2,10 +2,10 @@ var amqp = require('amqplib/callback_api');
 var amqurl = 'amqp://' + process.env.AMQ_HOST;
 amqp.connect(amqurl, function(err, conn) {
   conn.createChannel(function(err, ch) {
-    var exchange = 'amq.direct';
+    var exchange = 'provision';
     var key = 'foo';
 
-    ch.assertExchange(exchange, 'direct');
+    ch.assertExchange(exchange, 'topic');
     ch.assertQueue('', {
       exclusive: true
     }, function(err, q) {
